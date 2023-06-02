@@ -93,7 +93,21 @@ class BitforexRestApi(RestClient):
     
       
     def write_log(self, logmsg):
-        print(logmsg) 
+        print(logmsg)
+
+    def ping(self):
+        """"""
+        return self.send_request_sync(
+            method="GET",
+            path="/api/v1/ping"
+        )
+
+    def time(self):
+        """"""
+        return self.send_request_sync(
+            method="GET",
+            path="/api/v1/time"
+        )
 
     def query_contract(self):
         """"""
@@ -392,4 +406,27 @@ class BitforexRestApi(RestClient):
                 return {}, -1
         else:
             self.write_log(f"cancel_multi_order {symbol}, {str(orderIds)} failed:" + str(response))
-            return {}, -1  
+            return {}, -1
+
+    def my_trades(self, symbol, orderId, startTime, endTime, limit):
+        data = {
+            "symbol": symbol,
+            "orderId": orderId,
+            "startTime": startTime,
+            "endTime": endTime,
+            "limit": limit,
+        }
+        request, response = self.send_request_sync(
+            "POST",
+            "/api/v1/trade/myTrades",
+            data=data
+        )
+        if request.status == RequestStatus.success:
+            if response['success']:
+                return response, 0
+            else:
+                self.write_log(f"my_trades {symbol} error:" + response['code'] + "-" + response['message'])
+                return {}, -1
+        else:
+            self.write_log(f"my_trades {symbol}  failed:" + str(response))
+            return {}, -1

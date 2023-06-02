@@ -7,6 +7,18 @@ import java.util.*;
 
 public class ApiDemo {
 
+    public static void ping() {
+        TreeMap<String, Object> params = new TreeMap<String, Object>();
+        String result = HttpUtil.get("/api/v1/ping", params);
+        System.out.println(result);
+    }
+
+    public static void time() {
+        TreeMap<String, Object> params = new TreeMap<String, Object>();
+        String result = HttpUtil.get("/api/v1/time", params);
+        System.out.println(result);
+    }
+
     /**
      * Query current exchange trading rules and symbol information.
      */
@@ -154,6 +166,20 @@ public class ApiDemo {
     }
 
     /**
+     * Query my trades
+     */
+    public static void myTrades() {
+        TreeMap<String, Object> params = new TreeMap<String, Object>();
+        params.put("symbol", "coin-usdt-babydoge");
+        params.put("startTime", 1682914925000L);
+        params.put("endTime", 1685007725900L);
+        params.put("limit", 500);
+        params.put("orderId", "a262d030-11a5-40fd-a07c-7ba84aa68752");
+        String result = HttpUtil.post("/api/v1/trade/myTrades", params);
+        System.out.println(result);
+    }
+
+    /**
      * Query balance
      */
     public static void mainAccount() {
@@ -173,6 +199,8 @@ public class ApiDemo {
     }
 
     public static void main(String[] args) {
+        ping();
+        time();
         querySymbols();
         queryTicker();
         queryDepth();
@@ -187,5 +215,6 @@ public class ApiDemo {
         multiOrderInfo();
         mainAccount();
         allAccount();
+        myTrades();
     }
 }
